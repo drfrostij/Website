@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrFrostij</title>
+<meta name="description" content="DrFrostij: websites, Minecraft servers and software.">
+<link rel="icon" type="image/png" href="assets/avatar.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #f6f0ff;
+  --dim: #b9aed3;
+  --pink: #f3a6c4;
+  --lav: #9d93e8;
+  --night: #0e0b1f;
+  --line: rgba(255, 255, 255, .14);
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { min-height: 100%; }
+body {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+  font-family: "Sora", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--night);
+}
+
+/* background */
+.bg {
+  position: fixed; inset: 0; z-index: -1;
+  background: url("images/background.png") center / cover no-repeat;
+}
+.bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(rgba(14, 11, 31, .35), rgba(14, 11, 31, .8));
+}
+
+/* click to enter */
+.splash {
+  position: fixed; inset: 0; z-index: 10;
+  display: grid; place-items: center;
+  border: 0; cursor: pointer;
+  font: 600 1.25rem "Sora", system-ui, sans-serif;
+  letter-spacing: .02em;
+  color: var(--ink);
+  background: rgba(14, 11, 31, .55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: opacity .7s ease, visibility .7s;
+}
+.splash span { animation: pulse 2.4s ease-in-out infinite; }
+.splash:focus-visible { outline: 2px solid var(--pink); outline-offset: -8px; }
+body.entered .splash { opacity: 0; visibility: hidden; }
+@keyframes pulse { 50% { opacity: .45; } }
+
+/* card */
+.card {
+  width: min(440px, 100%);
+  padding: 32px 28px 28px;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: rgba(20, 15, 40, .48);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+  opacity: 0;
+  transform: translateY(18px) scale(.98);
+  transition: opacity .9s ease .25s, transform .9s ease .25s;
+  will-change: transform;
+}
+body.entered .card { opacity: 1; transform: none; }
+.card.tilting { transition: transform .08s linear; }
+
+.top { text-align: center; }
+.avatar {
+  position: relative;
+  width: 116px; height: 116px;
+  margin: 0 auto 18px;
+  padding: 3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--lav));
+  box-shadow: 0 0 44px rgba(243, 166, 196, .45);
+}
+.avatar img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  border: 3px solid var(--night);
+}
+.status {
+  position: absolute; right: 6px; bottom: 6px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #6ee7a0;
+  border: 3px solid var(--night);
+}
+h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -.01em; }
+.type {
+  min-height: 1.6em;
+  margin-top: 8px;
+  color: var(--dim);
+  font-size: .95rem;
+}
+.type::after {
+  content: "";
+  display: inline-block;
+  width: 2px; height: 1em;
+  margin-left: 3px;
+  vertical-align: -.15em;
+  background: var(--pink);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* socials */
+.socials {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 24px 0 8px;
+}
+.social {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 6px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: .78rem;
+  background: rgba(255, 255, 255, .05);
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+.social svg { width: 22px; height: 22px; }
+.social:hover, .social:focus-visible {
+  transform: translateY(-3px);
+  background: rgba(243, 166, 196, .14);
+  border-color: rgba(243, 166, 196, .55);
+}
+.social:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+
+/* sections */
+.section { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.section h2 { font-size: .95rem; font-weight: 600; margin-bottom: 10px; }
+.section p { font-size: .9rem; line-height: 1.65; color: var(--dim); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.chip {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: .82rem;
+}
+.chip small { margin-left: 6px; font-size: .74rem; color: var(--dim); }
+.chip.adv { border-color: rgba(243, 166, 196, .6); background: rgba(243, 166, 196, .1); }
+
+.roles { list-style: none; padding: 0; display: grid; gap: 8px; }
+.roles li {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .05);
+  font-size: .86rem;
+}
+.role {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .74rem;
+  font-weight: 600;
+  background: rgba(157, 147, 232, .22);
+  color: #d9d4ff;
+}
+.role.owner { background: rgba(243, 166, 196, .25); color: #ffd6e6; }
+
+@media (max-width: 380px) {
+  .card { padding: 26px 20px 22px; }
+  h1 { font-size: 1.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+}
+</style>
+<noscript><style>.splash { display: none; } .card { opacity: 1; transform: none; }</style></noscript>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<button class="splash" id="enter" type="button"><span>Click to enter</span></button>
+
+<main class="card" id="card">
+
+  <header class="top">
+    <div class="avatar">
+      <img src="assets/avatar.png" alt="DrFrostij profile picture">
+      <span class="status" title="Online"></span>
+    </div>
+    <h1>DrFrostij</h1>
+    <p class="type" id="type" aria-label="I build websites, Minecraft servers and software."></p>
+  </header>
+
+  <nav class="socials" aria-label="Links">
+    <a class="social" href="https://discord.com/users/1054344136217595914" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
+      Discord
+    </a>
+    <a class="social" href="https://github.com/drfrostij" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub
+    </a>
+    <a class="social" href="https://drfrostijinfomation.page.gd/?i=1" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Website
+    </a>
+  </nav>
+
+  <section class="section">
+    <h2>About me</h2>
+    <p>I build websites, Minecraft servers and software. Currently working on several personal projects.</p>
+  </section>
+
+  <section class="section">
+    <h2>Skills</h2>
+    <ul class="chips">
+      <li class="chip adv">Python<small>Advanced</small></li>
+      <li class="chip adv">Java<small>Advanced</small></li>
+      <li class="chip adv">Minecraft texture packs<small>Advanced</small></li>
+      <li class="chip">HTML, CSS, JavaScript<small>Basics</small></li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Roles</h2>
+    <ul class="roles">
+      <li>Floomze <span class="role owner">Owner</span></li>
+      <li>CrystaPVP <span class="role owner">Owner</span></li>
+      <li>BeyondSMP and many small servers <span class="role">Manager</span></li>
+      <li>Interseller craft <span class="role">Admin</span></li>
+      <li>EarthSMP <span class="role">Admin</span></li>
+      <li>LunarEclipse <span class="role">AC Tester</span></li>
+    </ul>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var body = document.body;
+  var card = document.getElementById("card");
+  var typeEl = document.getElementById("type");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var lines = [
+    "I build websites, Minecraft servers and software.",
+    "Python and Java dev.",
+    "Minecraft texture packs."
+  ];
+
+  // typewriter
+  var li = 0, ci = 0, deleting = false, started = false;
+  function tick() {
+    var text = lines[li];
+    typeEl.textContent = text.slice(0, ci);
+    if (!deleting && ci === text.length) { deleting = true; return setTimeout(tick, 1800); }
+    if (deleting && ci === 0) { deleting = false; li = (li + 1) % lines.length; }
+    ci += deleting ? -1 : 1;
+    setTimeout(tick, deleting ? 22 : 55);
+  }
+  function startType() {
+    if (started) return;
+    started = true;
+    if (reduce) { typeEl.textContent = lines[0]; return; }
+    tick();
+  }
+
+  // click to enter
+  document.getElementById("enter").addEventListener("click", function () {
+    body.classList.add("entered");
+    startType();
+  });
+
+  // tilt
+  if (!reduce && window.matchMedia("(hover: hover)").matches) {
+    document.addEventListener("mousemove", function (e) {
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - (r.left + r.width / 2)) / window.innerWidth;
+      var y = (e.clientY - (r.top + r.height / 2)) / window.innerHeight;
+      card.classList.add("tilting");
+      card.style.transform = "perspective(900px) rotateX(" + (-y * 8).toFixed(2) + "deg) rotateY(" + (x * 8).toFixed(2) + "deg)";
+    });
+    document.addEventListener("mouseleave", function () {
+      card.classList.remove("tilting");
+      card.style.transform = "";
+    });
+  }
+})();
+</script>
+</body>
+</html>
