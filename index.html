@@ -19,7 +19,9 @@
   --line: rgba(255, 255, 255, .14);
 }
 * { box-sizing: border-box; margin: 0; }
-html, body { min-height: 100%; }
+html, body {
+   isolation: isolate;
+   min-height: 100%; }
 body {
   min-height: 100svh;
   display: grid;
@@ -32,12 +34,27 @@ body {
 
 /* background */
 .bg {
-  position: fixed; inset: 0; z-index: -1;
-  background: url("background.png") center / cover no-repeat;
+   position: fixed;
+   inset: 0;
+   z-index: 0;
+   pointer-events: none;
+   background-image: url("./background.png");
+   background-position: center;
+   background-size: cover;
+   background-repeat: no-repeat;
 }
+
 .bg::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(rgba(14, 11, 31, .35), rgba(14, 11, 31, .8));
+   content: "";
+   position: absolute;
+   inset: 0;
+   background: linear-gradient(rgba(14, 11, 31, .35), rgba(14, 11, 31, .8));
+}
+
+/* Keep the page content above the background */
+.card {
+   position: relative;
+   z-index: 1;
 }
 
 /* click to enter */
